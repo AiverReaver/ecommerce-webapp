@@ -1,6 +1,6 @@
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
-from django.contrib.auth import get_user_model
+from apps.users.models import User
 
 
 class ProductCategory(models.Model):
@@ -11,7 +11,7 @@ class Product(models.Model):
     name = models.CharField(max_length=50)
     description = models.TextField()
     category = models.ForeignKey(ProductCategory, on_delete=models.CASCADE)
-    seller = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
+    seller = models.ForeignKey(User, on_delete=models.CASCADE)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     units = models.IntegerField(default=0)
     in_stock = models.BooleanField()
