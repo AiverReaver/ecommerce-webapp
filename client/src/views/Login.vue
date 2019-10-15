@@ -9,7 +9,7 @@
           <div class="field">
             <div class="ui left icon input">
               <i class="user icon"></i>
-              <input type="text" placeholder="Username" v-model="user.username" />
+              <input type="text" placeholder="Email" v-model="user.email" />
             </div>
           </div>
           <div class="field">
@@ -32,9 +32,24 @@
 
 <script>
 import { Component, Vue } from "vue-property-decorator";
+import { mapActions} from 'vuex';
 
-@Component
+@Component({
+  methods: {
+    ...mapActions(['loginUser', 'setTokens'])
+  },
+})
 export default class Login extends Vue {
-  user = {}
+  user = { email: "", password: "" };
+
+  onLoginClicked() {
+    this.loginUser(this.user)
+      .then(({data}) => {
+        this.$router.push('/');
+        this.setTokens(data);
+      }).catch(error => {
+        console.error(error);
+      })
+  }
 }
 </script>
