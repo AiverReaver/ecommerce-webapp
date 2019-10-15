@@ -34,5 +34,7 @@
 import { Component, Vue } from "vue-property-decorator";
 
 @Component
-export default class Login extends Vue {}
+export default class Login extends Vue {
+  user = {}
+}
 </script>
