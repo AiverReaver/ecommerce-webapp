@@ -9,11 +9,7 @@
           <div class="field">
             <div class="ui left icon input">
               <i class="user icon"></i>
-              <input
-                type="text"
-                placeholder="Username"
-                v-model="user.username"
-              />
+              <input type="text" placeholder="Username" v-model="user.name" />
             </div>
           </div>
           <div class="field">
@@ -42,16 +38,30 @@
         already have an account?
         <router-link to="/login">login</router-link>
       </div>
-    
     </div>
   </div>
 </template>
 
 <script>
-import { Vue, Component } from "vue-property-decorator";
+import { Vue, Component } from 'vue-property-decorator';
+import { mapActions } from 'vuex';
 
-@Component
+@Component({
+  methods: {
+    ...mapActions(['registerUser']),
+  },
+})
 export default class Register extends Vue {
-  user = {}
+  user = {};
+
+  onRegisterClicked() {
+    this.registerUser(this.user)
+      .then((_) => {
+        this.$router.push('/login');
+      })
+      .catch((error) => {
+        // TODO: Handle error
+      });
+  }
 }
 </script>

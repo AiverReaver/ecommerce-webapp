@@ -31,25 +31,26 @@
 </template>
 
 <script>
-import { Component, Vue } from "vue-property-decorator";
-import { mapActions} from 'vuex';
+import { Component, Vue } from 'vue-property-decorator';
+import { mapActions } from 'vuex';
 
 @Component({
   methods: {
-    ...mapActions(['loginUser', 'setTokens'])
+    ...mapActions(['loginUser', 'setTokens']),
   },
 })
 export default class Login extends Vue {
-  user = { email: "", password: "" };
+  user = { email: '', password: '' };
 
   onLoginClicked() {
     this.loginUser(this.user)
-      .then(({data}) => {
+      .then(({ data }) => {
         this.$router.push('/');
         this.setTokens(data);
-      }).catch(error => {
-        console.error(error);
       })
+      .catch((error) => {
+        // TODO: handle Error
+      });
   }
 }
 </script>

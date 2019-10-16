@@ -12,7 +12,7 @@ def register(request):
     serializer = UserSerializer(data=request.data)
 
     if serializer.is_valid():
-        serializer.save()
+        serializer.save(first_name=request.data["name"])
         return Response(serializer.data)
 
     return Response(serializer.errors)
