@@ -1,11 +1,26 @@
 from rest_framework import serializers
 
-from .models import User
+from .models import User, Seller, Customer
 
 
 class UserSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         return User.objects.create_user(**validated_data)
+
     class Meta:
         model = User
         fields = ("id", "email")
+
+
+class SellerSerializer(serializers.ModelSerializer):
+    user = UserSerializer()
+
+    def create(self, validated_data):
+        validated_user = validated_data.pop("user")
+        user = User.objects.create_user(**validated_user)
+        return Seller.objects.create(user=user, **validated_data)
+
+    class Meta:
+        model = Seller
+        fields = ("id", "company_name", "user")
+
