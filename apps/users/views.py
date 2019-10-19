@@ -3,16 +3,16 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
 
 from .models import User
-from .serialzers import UserSerializer, SellerSerializer
+from .serialzers import SellerSerializer, CustomerSerializer
 
 
 @api_view(["POST"])
 @permission_classes([AllowAny])
 def register_customer(request):
-    serializer = UserSerializer(data=request.data)
+    serializer = CustomerSerializer(data=request.data)
 
     if serializer.is_valid():
-        serializer.save(first_name=request.data["name"])
+        serializer.save()
         return Response(serializer.data)
 
     return Response(serializer.errors)
