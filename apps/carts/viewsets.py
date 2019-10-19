@@ -1,5 +1,5 @@
 from rest_framework import viewsets
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
@@ -11,14 +11,7 @@ from apps.orders.serializers import OrderSerializer
 class CartViewSet(viewsets.ModelViewSet):
     queryset = Cart.objects.all()
     serializer_class = CartSerializer
-
-    def get_permissions(self):
-        if self.action == "list" or self.action == "retrieve":
-            permission_classes = [AllowAny]
-        else:
-            permission_classes = [IsAuthenticated]
-
-        return [permission() for permission in permission_classes]
+    permission_classes = [IsAdminUser | IsAuthenticated]
 
     @action(detail=True, methods=["POST"])
     def checkout(self, request, pk=None):
@@ -28,6 +21,9 @@ class CartViewSet(viewsets.ModelViewSet):
             return Response(serializer.errors)
 
         cart = Cart.objects.get(pk=pk)
+
+        if not request.user.id == cart.user_id:
+            return Response({"detail": "Unauthorized"}, 401)
         serializer.save(cart=cart)
 
         return Response(serializer.data)

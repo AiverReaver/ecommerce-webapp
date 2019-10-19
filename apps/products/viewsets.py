@@ -1,5 +1,5 @@
 from rest_framework import viewsets
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
 
 from .serializers import ProductSerializer, ProductCategorySerializer
 from .models import Product, ProductCategory
@@ -13,7 +13,7 @@ class ProductViewSet(viewsets.ModelViewSet):
         if self.action == "list" or self.action == "retrieve":
             permission_classes = [AllowAny]
         else:
-            permission_classes = [IsAuthenticated]
+            permission_classes = [IsAuthenticated | IsAdminUser]
 
         return [permission() for permission in permission_classes]
 
