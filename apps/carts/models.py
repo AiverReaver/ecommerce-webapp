@@ -6,6 +6,7 @@ from apps.products.models import Product
 class Cart(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     total_price = models.DecimalField(max_digits=6, decimal_places=2)
+    is_paid = models.BooleanField(default=False)
 
 
 class CartItem(models.Model):
