@@ -26,6 +26,6 @@ class ProductCategoryViewSet(viewsets.ModelViewSet):
         if self.action == "list" or self.action == "retrieve":
             permission_classes = [AllowAny]
         else:
-            permission_classes = [IsAuthenticated]
+            permission_classes = [IsAdminUser]
 
         return [permission() for permission in permission_classes]

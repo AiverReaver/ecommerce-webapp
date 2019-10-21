@@ -38,3 +38,6 @@ class Seller(models.Model):
 
 class Customer(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
+    ship_address = models.CharField(max_length=300, blank=True)
+    ship_city = models.CharField(max_length=20, blank=True)
+    ship_country = models.CharField(max_length=20, blank=True)
