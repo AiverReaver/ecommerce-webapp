@@ -22,7 +22,7 @@ class CartViewSet(viewsets.ModelViewSet):
 
         cart = Cart.objects.get(pk=pk)
 
-        if not request.user.id == cart.user_id:
+        if request.user.id != cart.user_id:
             return Response({"detail": "Unauthorized"}, 401)
         serializer.save(cart=cart)
 
