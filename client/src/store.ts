@@ -24,7 +24,10 @@ export default new Vuex.Store({
       return ecom.post('/token/', user);
     },
     registerUser(context, user) {
-      return ecom.post('/register/', user);
+      return ecom.post('/register/customer/', user);
+    },
+    registerSeller(context, user) {
+      return ecom.post('/register/seller/', user);
     },
     setTokens({ commit }, data) {
       ecom.defaults.headers.Authorization = `Bearer ${data.access_token}`;

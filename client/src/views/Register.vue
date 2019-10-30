@@ -9,28 +9,63 @@
           <div class="field">
             <div class="ui left icon input">
               <i class="user icon"></i>
-              <input type="text" placeholder="Username" v-model="user.name" />
+              <input type="text" placeholder="username" v-model="userdata.user.name" />
             </div>
           </div>
           <div class="field">
             <div class="ui left icon input">
               <i class="user icon"></i>
-              <input type="text" placeholder="email" v-model="user.email" />
+              <input type="text" placeholder="email" v-model="userdata.user.email" />
             </div>
           </div>
           <div class="field">
             <div class="ui left icon input">
               <i class="lock icon"></i>
-              <input type="password" placeholder="Password" v-model="user.password" />
+              <input type="password" placeholder="Password" v-model="userdata.user.password" />
             </div>
           </div>
           <div class="field">
             <div class="ui left icon input">
               <i class="lock icon"></i>
-              <input type="password" placeholder="Confirm password" v-model="user.confirmPassword" />
+              <input
+                type="password"
+                placeholder="Confirm password"
+                v-model="userdata.user.confirmPassword"
+              />
+            </div>
+          </div>
+          <div v-if="isSeller" class="field">
+            <div class="ui left icon input">
+              <input type="text" placeholder="Company Name" v-model="userdata.company_name" />
+            </div>
+          </div>
+          <div v-if="!isSeller" class="field">
+            <div class="ui left icon input">
+              <input type="text" placeholder="address" v-model="userdata.address" />
+            </div>
+          </div>
+          <div v-if="!isSeller" class="field">
+            <div class="ui left icon input">
+              <input type="text" placeholder="city" v-model="userdata.city" />
+            </div>
+          </div>
+          <div v-if="!isSeller" class="field">
+            <div class="ui left icon input">
+              <input type="text" placeholder="country" v-model="userdata.country" />
             </div>
           </div>
           <input type="submit" value="Register" class="ui fluid large teal submit button" />
+          <div class="ui horizontal divider">OR</div>
+          <a
+            class="ui fluid primary basic button"
+            v-if="isSeller"
+            @click.prevent="isSeller = false"
+          >Register as User</a>
+          <a
+            class="ui fluid primary basic button"
+            v-else
+            @click.prevent="isSeller = true"
+          >Register as Seller</a>
         </div>
       </form>
 
@@ -48,20 +83,31 @@ import { mapActions } from 'vuex';
 
 @Component({
   methods: {
-    ...mapActions(['registerUser']),
+    ...mapActions(['registerUser', 'registerSeller']),
   },
 })
 export default class Register extends Vue {
-  user = {};
+  userdata = { user: {} };
+  isSeller = false;
 
   onRegisterClicked() {
-    this.registerUser(this.user)
-      .then((_) => {
-        this.$router.push('/login');
-      })
-      .catch((error) => {
-        // TODO: Handle error
-      });
+    if (this.isSeller) {
+      this.registerSeller(this.userdata)
+        .then((_) => {
+          this.$router.push('/login');
+        })
+        .catch((error) => {
+          // TODO: Handle error
+        });
+    } else {
+      this.registerUser(this.userdata)
+        .then((_) => {
+          this.$router.push('/login');
+        })
+        .catch((error) => {
+          // TODO: Handle error
+        });
+    }
   }
 }
 </script>

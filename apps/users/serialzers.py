@@ -14,7 +14,9 @@ class SellerSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         validated_user = validated_data.pop("user")
-        user = User.objects.create_user(**validated_user)
+        user = User.objects.create_user(
+            is_customer=False, is_seller=True, **validated_user
+        )
         return Seller.objects.create(user=user, **validated_data)
 
     class Meta:
@@ -27,7 +29,9 @@ class CustomerSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         validated_user = validated_data.pop("user")
-        user = User.objects.create_user(**validated_user)
+        user = User.objects.create_user(
+            is_customer=True, is_seller=False, **validated_user
+        )
         return Customer.objects.create(user=user, **validated_data)
 
     class Meta:
