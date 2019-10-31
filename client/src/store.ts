@@ -7,10 +7,20 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
+    categories: [],
+    selectedCategory: {},
     token: localStorage.getItem('token'),
     refreshToken: localStorage.getItem('refresh_token'),
   },
   mutations: {
+    setCategories(state, categories) {
+      state.categories = categories;
+    },
+
+    setSelectedCategory(state, category) {
+      state.selectedCategory = category;
+    },
+
     setToken(state, token) {
       state.token = token;
     },
@@ -20,6 +30,15 @@ export default new Vuex.Store({
     },
   },
   actions: {
+    async fetchProductCategories({ commit }) {
+      const { data } = await ecom.get('/categories/');
+      commit('setCategories', data);
+      commit('setSelectedCategory', data[0]);
+    },
+    async getProducts(context, categoryId) {
+      const { data } = await ecom.get(`/categories/${categoryId}/products/`);
+      return data;
+    },
     loginUser(context, user) {
       return ecom.post('/token/', user);
     },

@@ -15,15 +15,16 @@ class CartViewSet(viewsets.ModelViewSet):
 
     @action(detail=True, methods=["POST"])
     def checkout(self, request, pk=None):
+        cart = Cart.objects.get(pk=pk)
+
+        if request.user.id != cart.user_id:
+            return Response({"detail": "Unauthorized"}, 401)
+
         serializer = OrderSerializer(data=request.data)
 
         if not serializer.is_valid():
             return Response(serializer.errors)
 
-        cart = Cart.objects.get(pk=pk)
-
-        if request.user.id != cart.user_id:
-            return Response({"detail": "Unauthorized"}, 401)
         serializer.save(cart=cart)
 
         return Response(serializer.data)

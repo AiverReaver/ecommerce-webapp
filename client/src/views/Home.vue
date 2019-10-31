@@ -1,12 +1,26 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png" />
+  <div>
+    <CategoryMenu :categories="categories" />
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
+import { State, Action } from 'vuex-class';
+import CategoryMenu from '../components/CategoryMenu.vue';
 
-@Component({})
-export default class Home extends Vue {}
+@Component({
+  components: {
+    CategoryMenu,
+  },
+})
+export default class Home extends Vue {
+  @State categories;
+
+  @Action fetchProductCategories;
+
+  created() {
+    this.fetchProductCategories();
+  }
+}
 </script>
