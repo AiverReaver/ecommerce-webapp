@@ -44,7 +44,7 @@ export default class CategoryMenu extends Vue {
   }
 
   async onCategorySelected(category) {
-    this.products = await this.getProducts(this.selectedCategory.id);
+    this.products = await this.getProducts(category.id);
     this.setSelectedCategory(category);
   }
 }
