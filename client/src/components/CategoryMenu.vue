@@ -39,13 +39,13 @@ export default class CategoryMenu extends Vue {
   @Action getProducts;
   @Mutation setSelectedCategory;
 
-  async mounted() {
-    this.products = await this.getProducts(this.selectedCategory.id);
+  mounted() {
+    this.products = this.getProducts();
   }
 
   async onCategorySelected(category) {
-    this.products = await this.getProducts(category.id);
     this.setSelectedCategory(category);
+    this.products = await this.getProducts();
   }
 }
 </script>

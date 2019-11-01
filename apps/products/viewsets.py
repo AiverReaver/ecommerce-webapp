@@ -21,13 +21,21 @@ class ProductViewSet(viewsets.ModelViewSet):
 
         return [permission() for permission in permission_classes]
 
-    @action(detail=True, methods=["POST"], url_name="addtocart", url_path="addtocart")
-    def add_to_cart(self, request, pk=None, category_pk=None):
+    @action(detail=True, methods=["POST", "DELETE", "PUT"], url_path="cart")
+    def cart(self, request, pk=None, category_pk=None):
         product = Product.objects.get(pk=pk)
-        cart = Cart.objects.filter(user_id=request.user.id).last()
-        cartitem = CartItem.objects.create(product=product, quantity=1, cart=cart)
-        ser = CartItemSerializer(cartitem)
-        return Response(ser.data)
+        cart = Cart.objects.filter(user_id=request.user.id, is_paid=False).last()
+        serializer = CartItemSerializer(data=request.data)
+
+        if not serializer.is_valid():
+            return Response(serializer.errors)
+
+        if cart is None:
+            cart = Cart.objects.create(user=request.user, total_price=0.0)
+
+        serializer.save(product=product, cart=cart)
+
+        return Response(serializer.data)
 
     def list(self, request, category_pk=None):
         queryset = Product.objects.filter(category=category_pk)
