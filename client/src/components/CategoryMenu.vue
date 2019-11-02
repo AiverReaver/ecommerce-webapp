@@ -13,7 +13,7 @@
     </div>
     <div class="twelve wide stretched column">
       <div class="ui segment">
-        <ProductList :products="products" />
+        <ProductList :products="selectedCategory.products" />
       </div>
     </div>
   </div>
@@ -31,21 +31,24 @@ import ProductList from './ProductList.vue';
   },
 })
 export default class CategoryMenu extends Vue {
-  products = [];
-
   @Prop() categories;
 
   @State selectedCategory;
   @Action getProducts;
   @Mutation setSelectedCategory;
 
-  mounted() {
-    this.products = this.getProducts();
+  @State cart;
+  @Mutation setCart;
+  @Action getCart;
+
+  created() {
+    this.getCart().then(({ data }) => {
+      this.setCart(data);
+    });
   }
 
   async onCategorySelected(category) {
     this.setSelectedCategory(category);
-    this.products = await this.getProducts();
   }
 }
 </script>

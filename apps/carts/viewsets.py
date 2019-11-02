@@ -13,6 +13,11 @@ class CartViewSet(viewsets.ModelViewSet):
     serializer_class = CartSerializer
     permission_classes = [IsAdminUser | IsAuthenticated]
 
+    def list(self, request, *args, **kwargs):
+        cart = Cart.objects.filter(user_id=request.user.id, is_paid=False).last()
+        serializer = CartSerializer(cart)
+        return Response(serializer.data)
+
     @action(detail=True, methods=["POST"])
     def checkout(self, request, pk=None):
         cart = Cart.objects.get(pk=pk)

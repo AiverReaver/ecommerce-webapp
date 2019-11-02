@@ -41,17 +41,6 @@ export default new Vuex.Store({
       );
       return data;
     },
-
-    async addToCart({ state }, productId) {
-      const { data } = await ecom.post(
-        `/categories/${state.selectedCategory.id}/products/${productId}/cart/`,
-        {
-          quantity: 1,
-        }
-      );
-      console.log(data);
-      return data;
-    },
     loginUser(context, user) {
       return ecom.post('/token/', user);
     },
