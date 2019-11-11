@@ -1,4 +1,5 @@
 # ecommerce
+Project is not completed yet.
 
 ## Project setup
 ```
