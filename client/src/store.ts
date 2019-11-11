@@ -37,7 +37,7 @@ export default new Vuex.Store({
     },
     async getProducts({ state }) {
       const { data } = await ecom.get(
-        `/categories/${state.selectedCategory.id}/products/`
+        `/categories/${state.selectedCategory.id}/products/`,
       );
       return data;
     },

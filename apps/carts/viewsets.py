@@ -18,6 +18,7 @@ class CartViewSet(viewsets.ModelViewSet):
         serializer = CartSerializer(cart)
         return Response(serializer.data)
 
+
     @action(detail=True, methods=["POST"])
     def checkout(self, request, pk=None):
         cart = Cart.objects.get(pk=pk)
