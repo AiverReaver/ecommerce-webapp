@@ -25,7 +25,7 @@ class CartViewSet(viewsets.ModelViewSet):
         if "id" in request.data:
             cart = Cart.objects.get(pk=request.data["id"])
         else:
-            cart = Cart.objects.create(user_id=request.user.id)
+            cart = Cart.objects.create(user_id=request.user.id, total_price=0)
 
         serializer = CartItemSerializer(data=request.data)
 

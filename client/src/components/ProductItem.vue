@@ -14,16 +14,18 @@
 
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator';
-import { Action } from 'vuex-class';
+import { Action, State } from 'vuex-class';
 
 @Component
 export default class ProductItem extends Vue {
   @Prop() product;
 
+  @State cart;
   @Action addToCart;
 
   onAddToCartCliked() {
-    this.addToCart(this.product.id);
+    const cartToSend = { id: this.cart.id, productId: this.product.id };
+    this.addToCart(cartToSend);
   }
 }
 </script>

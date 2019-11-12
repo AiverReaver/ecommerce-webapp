@@ -37,16 +37,6 @@ export default class CategoryMenu extends Vue {
   @Action getProducts;
   @Mutation setSelectedCategory;
 
-  @State cart;
-  @Mutation setCart;
-  @Action getCart;
-
-  created() {
-    this.getCart().then(({ data }) => {
-      this.setCart(data);
-    });
-  }
-
   async onCategorySelected(category) {
     this.setSelectedCategory(category);
   }

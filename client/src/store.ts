@@ -9,6 +9,7 @@ export default new Vuex.Store({
   state: {
     categories: [],
     selectedCategory: { id: '' },
+    cart: { cartitems: [] },
     token: localStorage.getItem('token'),
     refreshToken: localStorage.getItem('refresh_token'),
   },
@@ -19,6 +20,9 @@ export default new Vuex.Store({
 
     setSelectedCategory(state, category) {
       state.selectedCategory = category;
+    },
+    setCart(state, cart) {
+      state.cart = cart;
     },
 
     setToken(state, token) {
@@ -41,6 +45,21 @@ export default new Vuex.Store({
       );
       return data;
     },
+
+    async addToCart({ commit }, cart) {
+      const { data } = await ecom.post(`/cart/`, cart);
+
+      commit('setCart', data);
+    },
+
+    async getCart({ commit }) {
+      const { data } = await ecom.get('/cart/');
+      commit('setCart', data);
+    },
+
+    deleteCart(context, id) {
+      return ecom.delete(`/cart/${id}/`);
+    },
     loginUser(context, user) {
       return ecom.post('/token/', user);
     },
@@ -58,6 +77,20 @@ export default new Vuex.Store({
 
       localStorage.setItem('token', data.access);
       localStorage.setItem('refresh_token', data.refresh);
+    },
+    logoutUser({ commit, state }) {
+      commit('setToken', null);
+      commit('setRefreshToken', null);
+      localStorage.removeItem('token');
+      localStorage.removeItem('refresh_token');
+    },
+  },
+  getters: {
+    isLoggedIn(state) {
+      return state.token !== null;
+    },
+    CartItemsCount(state) {
+      return state.cart.cartitems.length;
     },
   },
 });
