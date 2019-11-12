@@ -5,7 +5,11 @@
       <div class="meta" v-if="!product.in_stock">Out of Stock</div>
       <div class="description">{{ product.description }}</div>
     </div>
-    <div class="ui bottom attached button" @click="onAddToCartCliked">
+    <div
+      class="ui bottom attached button"
+      :class="{'red disabled':!product.in_stock, 'green': product.in_stock }"
+      @click="onAddToCartCliked"
+    >
       <i class="add icon"></i>
       Add to cart
     </div>

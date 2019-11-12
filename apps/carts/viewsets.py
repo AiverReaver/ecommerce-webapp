@@ -55,6 +55,9 @@ class CartViewSet(viewsets.ModelViewSet):
         if not serializer.is_valid():
             return Response(serializer.errors)
 
+        cart.is_paid = True
+        cart.save()
+
         serializer.save(cart=cart)
 
         return Response(serializer.data)

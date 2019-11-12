@@ -2,10 +2,10 @@
   <div class="ui secondary menu">
     <router-link class="item" exact-active-class="active" to="/">Home</router-link>
     <div class="right menu">
-      <a class="item" v-if="isLoggedIn">
+      <router-link exact-active-class="active" to="/checkout" class="item" v-if="isLoggedIn">
         <i class="shopping cart icon"></i>
         <div class="ui teal left pointing label">{{CartItemsCount}}</div>
-      </a>
+      </router-link>
       <a class="item" v-if="isLoggedIn" @click="logout">Logout</a>
       <router-link v-if="!isLoggedIn" class="item" exact-active-class="active" to="/login">Login</router-link>
       <div class="item" v-if="!isLoggedIn">

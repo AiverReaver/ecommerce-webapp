@@ -9,7 +9,7 @@ export default new Vuex.Store({
   state: {
     categories: [],
     selectedCategory: { id: '' },
-    cart: { cartitems: [] },
+    cart: { id: '', cartitems: [] },
     token: localStorage.getItem('token'),
     refreshToken: localStorage.getItem('refresh_token'),
   },
@@ -55,6 +55,10 @@ export default new Vuex.Store({
     async getCart({ commit }) {
       const { data } = await ecom.get('/cart/');
       commit('setCart', data);
+    },
+
+    async checkout({ state }, id) {
+      const { data } = await ecom.post(`/cart/${state.cart.id}/checkout/`);
     },
 
     deleteCart(context, id) {
