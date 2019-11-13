@@ -16,7 +16,6 @@ import CategoryMenu from '../components/CategoryMenu.vue';
 })
 export default class Home extends Vue {
   @State categories;
-
   @Action fetchProductCategories;
 
   created() {

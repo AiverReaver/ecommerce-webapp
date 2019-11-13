@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
+import jwt from 'jsonwebtoken';
 
 import ecom from './api';
 
@@ -9,7 +10,7 @@ export default new Vuex.Store({
   state: {
     categories: [],
     selectedCategory: { id: '' },
-    cart: { id: '', cartitems: [] },
+    cart: { id: 0, cartitems: [] },
     token: localStorage.getItem('token'),
     refreshToken: localStorage.getItem('refresh_token'),
   },
@@ -52,17 +53,19 @@ export default new Vuex.Store({
       commit('setCart', data);
     },
 
-    async getCart({ commit }) {
+    async getCart({ commit, state }) {
+      ecom.defaults.headers.Authorization = `Bearer ${state.token}`;
       const { data } = await ecom.get('/cart/');
       commit('setCart', data);
     },
 
-    async checkout({ state }, id) {
+    async checkout({ commit, state }) {
       const { data } = await ecom.post(`/cart/${state.cart.id}/checkout/`);
+      commit('setCart', {});
     },
 
-    deleteCart(context, id) {
-      return ecom.delete(`/cart/${id}/`);
+    deleteCart({ state }) {
+      return ecom.delete(`/cart/${state.cart.id}/`);
     },
     loginUser(context, user) {
       return ecom.post('/token/', user);
@@ -74,7 +77,7 @@ export default new Vuex.Store({
       return ecom.post('/register/seller/', user);
     },
     setTokens({ commit }, data) {
-      ecom.defaults.headers.Authorization = `Bearer ${data.access_token}`;
+      ecom.defaults.headers.Authorization = `Bearer ${data.access}`;
 
       commit('setToken', data.access);
       commit('setRefreshToken', data.refresh);
@@ -82,7 +85,8 @@ export default new Vuex.Store({
       localStorage.setItem('token', data.access);
       localStorage.setItem('refresh_token', data.refresh);
     },
-    logoutUser({ commit, state }) {
+    logoutUser({ commit }) {
+      delete ecom.defaults.headers.common.Authorization;
       commit('setToken', null);
       commit('setRefreshToken', null);
       localStorage.removeItem('token');
@@ -91,9 +95,26 @@ export default new Vuex.Store({
   },
   getters: {
     isLoggedIn(state) {
-      return state.token !== null;
+      let decodedToken;
+
+      if (state.token !== '') {
+        decodedToken = jwt.decode(state.token, {
+          complete: true,
+        });
+      }
+      if (!decodedToken) {
+        return false;
+      } else if (decodedToken.payload.exp < new Date().getTime() / 1000) {
+        return false;
+      } else {
+        return true;
+      }
     },
     CartItemsCount(state) {
+      if (state.cart.cartitems === undefined) {
+        return 0;
+      }
+
       return state.cart.cartitems.length;
     },
   },

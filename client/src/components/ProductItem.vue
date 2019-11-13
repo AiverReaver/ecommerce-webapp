@@ -26,10 +26,12 @@ export default class ProductItem extends Vue {
 
   @State cart;
   @Action addToCart;
+  @Action getCart;
 
   onAddToCartCliked() {
     const cartToSend = { id: this.cart.id, productId: this.product.id };
     this.addToCart(cartToSend);
+    this.getCart();
   }
 }
 </script>

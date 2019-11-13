@@ -1,15 +1,33 @@
 <template>
   <div class="ui secondary menu">
-    <router-link class="item" exact-active-class="active" to="/">Home</router-link>
+    <router-link class="item" exact-active-class="active" to="/"
+      >Home</router-link
+    >
     <div class="right menu">
-      <router-link exact-active-class="active" to="/checkout" class="item" v-if="isLoggedIn">
+      <router-link
+        exact-active-class="active"
+        to="/checkout"
+        class="item"
+        v-if="isLoggedIn"
+      >
         <i class="shopping cart icon"></i>
-        <div class="ui teal left pointing label">{{CartItemsCount}}</div>
+        <div class="ui teal left pointing label">{{ CartItemsCount }}</div>
       </router-link>
       <a class="item" v-if="isLoggedIn" @click="logout">Logout</a>
-      <router-link v-if="!isLoggedIn" class="item" exact-active-class="active" to="/login">Login</router-link>
+      <router-link
+        v-if="!isLoggedIn"
+        class="item"
+        exact-active-class="active"
+        to="/login"
+        >Login</router-link
+      >
       <div class="item" v-if="!isLoggedIn">
-        <router-link class="ui primary button" exact-active-class="active" to="/register">SignUp</router-link>
+        <router-link
+          class="ui primary button"
+          exact-active-class="active"
+          to="/register"
+          >SignUp</router-link
+        >
       </div>
     </div>
   </div>
@@ -27,12 +45,12 @@ export default class Navbar extends Vue {
   @Action getCart;
 
   mounted() {
-    this.getCart();
+    if (this.isLoggedIn) {
+      this.getCart();
+    }
   }
   public logout() {
     this.logoutUser();
   }
 }
 </script>
-
-

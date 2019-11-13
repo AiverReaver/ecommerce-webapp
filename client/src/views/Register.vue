@@ -79,16 +79,25 @@
 
 <script>
 import { Vue, Component } from 'vue-property-decorator';
-import { mapActions } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 
 @Component({
   methods: {
     ...mapActions(['registerUser', 'registerSeller']),
   },
+  computed: {
+    ...mapGetters(['isLoggedIn']),
+  },
 })
 export default class Register extends Vue {
   userdata = { user: {} };
   isSeller = false;
+
+  mounted() {
+    if (this.isLoggedIn) {
+      this.$router.replace('/');
+    }
+  }
 
   onRegisterClicked() {
     if (this.isSeller) {
