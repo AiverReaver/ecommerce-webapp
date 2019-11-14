@@ -9,6 +9,7 @@
 
 <script>
 import { Component, Vue } from 'vue-property-decorator';
+import { Action } from 'vuex-class';
 import Navbar from '@/components/Navbar.vue';
 
 @Component({
@@ -16,7 +17,13 @@ import Navbar from '@/components/Navbar.vue';
     Navbar,
   },
 })
-export default class App extends Vue {}
+export default class App extends Vue {
+  @Action decodeUserToken;
+
+  created() {
+    this.decodeUserToken();
+  }
+}
 </script>
 
 <style>

@@ -11,6 +11,8 @@ export default new Vuex.Store({
     categories: [],
     selectedCategory: { id: '' },
     cart: { id: 0, cartitems: [] },
+    tokenPayload: null,
+    orders: [],
     token: localStorage.getItem('token'),
     refreshToken: localStorage.getItem('refresh_token'),
   },
@@ -25,13 +27,18 @@ export default new Vuex.Store({
     setCart(state, cart) {
       state.cart = cart;
     },
-
+    setOrders(state, orders) {
+      state.orders = orders;
+    },
     setToken(state, token) {
       state.token = token;
     },
 
     setRefreshToken(state, token) {
       state.refreshToken = token;
+    },
+    setTokenPayload(state, tokenPayload) {
+      state.tokenPayload = tokenPayload;
     },
   },
   actions: {
@@ -63,7 +70,25 @@ export default new Vuex.Store({
       const { data } = await ecom.post(`/cart/${state.cart.id}/checkout/`);
       commit('setCart', {});
     },
+    async fetchOrders({ commit, state }) {
+      const payload: any = state.tokenPayload;
+      const { data } = await ecom.get(`/customers/${payload.user_id}/orders/`);
+      commit('setOrders', data);
+    },
+    decodeUserToken({ commit, state }) {
+      let decodedToken: any;
 
+      if (state.token !== '') {
+        decodedToken = jwt.decode(state.token, {
+          complete: true,
+        });
+      }
+      if (decodedToken) {
+        commit('setTokenPayload', decodedToken.payload);
+      } else {
+        commit('setTokenPayload', null);
+      }
+    },
     deleteCart({ state }) {
       return ecom.delete(`/cart/${state.cart.id}/`);
     },
@@ -95,20 +120,18 @@ export default new Vuex.Store({
   },
   getters: {
     isLoggedIn(state) {
-      let decodedToken;
+      const payload: any = state.tokenPayload;
 
-      if (state.token !== '') {
-        decodedToken = jwt.decode(state.token, {
-          complete: true,
-        });
-      }
-      if (!decodedToken) {
+      if (!payload) {
         return false;
-      } else if (decodedToken.payload.exp < new Date().getTime() / 1000) {
+      } else if (payload.exp < new Date().getTime() / 1000) {
         return false;
       } else {
         return true;
       }
+    },
+    getOrders(state) {
+      return state.orders;
     },
     CartItemsCount(state) {
       if (state.cart.cartitems === undefined) {

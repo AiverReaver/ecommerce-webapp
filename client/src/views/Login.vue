@@ -15,18 +15,10 @@
           <div class="field">
             <div class="ui left icon input">
               <i class="lock icon"></i>
-              <input
-                type="password"
-                placeholder="Password"
-                v-model="user.password"
-              />
+              <input type="password" placeholder="Password" v-model="user.password" />
             </div>
           </div>
-          <input
-            type="submit"
-            value="Login"
-            class="ui fluid large teal submit button"
-          />
+          <input type="submit" value="Login" class="ui fluid large teal submit button" />
         </div>
       </form>
 
@@ -44,7 +36,7 @@ import { mapActions, mapGetters } from 'vuex';
 
 @Component({
   methods: {
-    ...mapActions(['loginUser', 'setTokens', 'getCart']),
+    ...mapActions(['loginUser', 'setTokens', 'getCart', 'decodeUserToken']),
   },
   computed: {
     ...mapGetters(['isLoggedIn']),
@@ -65,6 +57,7 @@ export default class Login extends Vue {
         this.$router.push('/');
         this.setTokens(data);
         this.getCart();
+        this.decodeUserToken();
       })
       .catch((error) => {
         // TODO: handle Error
