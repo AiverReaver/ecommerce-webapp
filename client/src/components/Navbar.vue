@@ -1,6 +1,12 @@
 <template>
   <div class="ui secondary menu">
     <router-link class="item" exact-active-class="active" to="/">Home</router-link>
+    <router-link
+      class="item"
+      v-if="role === 'seller'"
+      exact-active-class="active"
+      to="/create"
+    >Create Product</router-link>
     <div class="right menu">
       <div class="item">
         <router-link
@@ -31,8 +37,11 @@ import { Getter, Action } from 'vuex-class';
 
 @Component
 export default class Navbar extends Vue {
+  // Getter
   @Getter isLoggedIn;
   @Getter CartItemsCount;
+  @Getter role;
+  // Actions
   @Action logoutUser;
   @Action getCart;
   @Action decodeUserToken;

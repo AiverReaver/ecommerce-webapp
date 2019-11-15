@@ -25,6 +25,19 @@ class ProductViewSet(viewsets.ModelViewSet):
         serializer = ProductSerializer(queryset, many=True)
         return Response(serializer.data)
 
+    def create(self, request, category_pk=None, *args, **kwargs):
+
+        if not request.user.is_seller:
+            return Response({"error": "unautorized"}, 401)
+        serializer = ProductSerializer(data=request.data)
+
+        if serializer.is_valid():
+            category = ProductCategory.objects.get(pk=category_pk)
+            serializer.save(seller=request.user, category=category)
+            return Response(serializer.data)
+
+        return Response(serializer.errors, 404)
+
 
 class ProductCategoryViewSet(viewsets.ModelViewSet):
     queryset = ProductCategory.objects.all()

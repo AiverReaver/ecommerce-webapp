@@ -47,6 +47,13 @@ export default new Vuex.Store({
       commit('setCategories', data);
       commit('setSelectedCategory', data[0]);
     },
+
+    async createProduct(context, payload) {
+      await ecom.post(
+        `/categories/${payload.categoryId}/products/`,
+        payload.product,
+      );
+    },
     async getProducts({ state }) {
       const { data } = await ecom.get(
         `/categories/${state.selectedCategory.id}/products/`,
@@ -129,6 +136,13 @@ export default new Vuex.Store({
       } else {
         return true;
       }
+    },
+    role(state) {
+      const payload: any = state.tokenPayload;
+      if (payload) {
+        return payload.role;
+      }
+      return 'anonymous';
     },
     getOrders(state) {
       return state.orders;

@@ -18,17 +18,22 @@
 
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator';
-import { Action, State } from 'vuex-class';
+import { Action, State, Getter } from 'vuex-class';
 
 @Component
 export default class ProductItem extends Vue {
   @Prop() product;
 
+  @Getter isLoggedIn;
   @State cart;
   @Action addToCart;
   @Action getCart;
 
   onAddToCartCliked() {
+    if (!this.isLoggedIn) {
+      this.$router.push('/login');
+      return;
+    }
     const cartToSend = { id: this.cart.id, productId: this.product.id };
     this.addToCart(cartToSend);
     this.getCart();

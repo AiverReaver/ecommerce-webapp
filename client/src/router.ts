@@ -5,6 +5,7 @@ import Login from './views/Login.vue';
 import Register from './views/Register.vue';
 import Checkout from './views/Checkout.vue';
 import Order from './views/Order.vue';
+import CreateProduct from './views/CreateProduct.vue';
 
 Vue.use(Router);
 
@@ -36,6 +37,11 @@ export default new Router({
       path: '/orders',
       name: 'orders',
       component: Order,
+    },
+    {
+      path: '/create',
+      name: 'create product',
+      component: CreateProduct,
     },
   ],
 });

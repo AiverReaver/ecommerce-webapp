@@ -26,3 +26,4 @@ class Product(models.Model):
             self.in_stock = True
         else:
             self.in_stock = False
+        super(Product, self).save(*args, **kwargs)
