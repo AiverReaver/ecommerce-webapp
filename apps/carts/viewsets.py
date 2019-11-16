@@ -4,9 +4,10 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 import io
 from rest_framework.parsers import JSONParser
+from django.db.models import Prefetch
 
 from .models import Cart, CartItem
-from .serializers import CartSerializer, CartItemSerializer
+from .serializers import CartSerializer, CartItemSerializer, OrderItemserializer
 from apps.orders.serializers import OrderSerializer
 from apps.products.models import Product
 
@@ -17,9 +18,31 @@ class CartViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAdminUser | IsAuthenticated]
 
     def list(self, request, *args, **kwargs):
-        cart = Cart.objects.filter(user_id=request.user.id, is_paid=False).last()
-        serializer = CartSerializer(cart)
-        return Response(serializer.data)
+
+        if request.user.is_customer:
+            cart = Cart.objects.filter(user_id=request.user.id, is_paid=False).last()
+            serializer = CartSerializer(cart)
+            return Response(serializer.data)
+
+        if request.user.is_seller or request.user.is_superuser:
+            # OLD SOLUTION HERE FOR FUTURE REF
+            # carts = Cart.objects.filter(is_paid=True).prefetch_related(
+            #     Prefetch(
+            #         "cartitems",
+            #         queryset=CartItem.objects.filter(
+            #             product__seller_id=request.user.id
+            #         ),
+            #     )
+            # )
+
+            carts_id = Cart.objects.filter(is_paid=True).values_list("id", flat=True)
+
+            cartitems = CartItem.objects.filter(
+                cart_id__in=carts_id, product__seller_id=request.user.id
+            ).prefetch_related("cart__user__customer")
+
+            serializer = OrderItemserializer(cartitems, many=True)
+            return Response(serializer.data)
 
     def create(self, request, *args, **kwargs):
         if "id" in request.data:
