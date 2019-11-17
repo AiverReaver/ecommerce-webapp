@@ -82,6 +82,13 @@ export default new Vuex.Store({
       const { data } = await ecom.get(`/customers/${payload.user_id}/orders/`);
       commit('setOrders', data);
     },
+
+    async fetchProductOrders({ state }) {
+      ecom.defaults.headers.Authorization = `Bearer ${state.token}`;
+      const { data } = await ecom.get('/cart/');
+
+      return data;
+    },
     decodeUserToken({ commit, state }) {
       let decodedToken: any;
 

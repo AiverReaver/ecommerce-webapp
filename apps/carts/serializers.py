@@ -11,10 +11,20 @@ class OrderItemserializer(serializers.ModelSerializer):
         required=False, source="product.description"
     )
     user = serializers.CharField(required=False, source="cart.user.first_name")
+    address = serializers.CharField(
+        required=False, source="cart.user.customer.ship_address"
+    )
 
     class Meta:
         model = CartItem
-        fields = ("id", "product_id", "product_name", "product_decription", "user")
+        fields = (
+            "id",
+            "product_id",
+            "product_name",
+            "product_decription",
+            "user",
+            "address",
+        )
 
 
 class CartItemSerializer(serializers.ModelSerializer):

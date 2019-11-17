@@ -1,9 +1,6 @@
 <template>
   <div>
-    <div
-      class="ui right floated small primary icon negative button"
-      @click="onDeleteClicked"
-    >
+    <div class="ui right floated small primary icon negative button" @click="onDeleteClicked">
       <i class="trash alternate outline icon"></i>
     </div>
 
@@ -20,9 +17,7 @@
       <tbody>
         <tr v-for="cartitems in cart.cartitems" :key="cartitems.id">
           <td>
-            <h3 class="ui center aligned header">
-              {{ cartitems.product.name }}
-            </h3>
+            <h3 class="ui center aligned header">{{ cartitems.product.name }}</h3>
           </td>
           <td class="single line">{{ cartitems.product.description }}</td>
           <td class="single line">₹ {{ cartitems.product.price }}</td>
@@ -54,12 +49,13 @@ import { Action, State, Mutation, Getter } from 'vuex-class';
 export default class Checkout extends Vue {
   @State cart;
   @Getter isLoggedIn;
+  @Getter role;
   @Mutation setCart;
   @Action checkout;
   @Action deleteCart;
 
   mounted() {
-    if (!this.isLoggedIn) {
+    if (!this.isLoggedIn || this.role !== 'customer') {
       this.$router.replace('/');
     }
   }

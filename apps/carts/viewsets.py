@@ -25,21 +25,10 @@ class CartViewSet(viewsets.ModelViewSet):
             return Response(serializer.data)
 
         if request.user.is_seller or request.user.is_superuser:
-            # OLD SOLUTION HERE FOR FUTURE REF
-            # carts = Cart.objects.filter(is_paid=True).prefetch_related(
-            #     Prefetch(
-            #         "cartitems",
-            #         queryset=CartItem.objects.filter(
-            #             product__seller_id=request.user.id
-            #         ),
-            #     )
-            # )
-
             carts_id = Cart.objects.filter(is_paid=True).values_list("id", flat=True)
-
             cartitems = CartItem.objects.filter(
                 cart_id__in=carts_id, product__seller_id=request.user.id
-            ).prefetch_related("cart__user__customer")
+            )
 
             serializer = OrderItemserializer(cartitems, many=True)
             return Response(serializer.data)

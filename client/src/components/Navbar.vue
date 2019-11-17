@@ -11,14 +11,19 @@
       <div class="item">
         <router-link
           exact-active-class="active"
-          to="/orders"
+          :to=" this.role === 'customer' ? '/orders': '/product/orders'"
           class="ui labeled button"
           v-if="isLoggedIn"
         >
           <i class="shopping bag icon"></i>My Orders
         </router-link>
       </div>
-      <router-link exact-active-class="active" to="/checkout" class="item" v-if="isLoggedIn">
+      <router-link
+        exact-active-class="active"
+        to="/checkout"
+        class="item"
+        v-if="isLoggedIn && role === 'customer'"
+      >
         <i class="shopping cart icon"></i>
         <div class="ui teal left pointing label">{{ CartItemsCount }}</div>
       </router-link>
@@ -47,7 +52,7 @@ export default class Navbar extends Vue {
   @Action decodeUserToken;
 
   mounted() {
-    if (this.isLoggedIn) {
+    if (this.isLoggedIn && this.role === 'customer') {
       this.getCart();
     }
   }
